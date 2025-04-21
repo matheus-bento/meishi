@@ -1,0 +1,6 @@
+@Meishi.Server_HostAddress = http://localhost:5226
+
+GET {{Meishi.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
