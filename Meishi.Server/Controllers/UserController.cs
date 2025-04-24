@@ -1,52 +1,53 @@
 using Meishi.Server.Models.Response;
 using Meishi.Server.Services.GithubApi;
-using Meishi.Server.Services.GithubAuth;
-using Meishi.Server.Services.GithubAuth.Models;
+using Meishi.Server.Services.GithubApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meishi.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly IGithubAuthService _githubAuthService;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IGithubApiService _githubApiService;
 
-        public UserController(ILogger<UserController> logger, IGithubAuthService githubAuthService, IHttpClientFactory httpClientFactory)
+        public UserController(
+            ILogger<UserController> logger,
+            IGithubApiService githubApiService)
         {
             this._logger = logger;
-            this._githubAuthService = githubAuthService;
-            this._httpClientFactory = httpClientFactory;
+            this._githubApiService = githubApiService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Token([FromQuery] string code)
+        [HttpGet("{user}")]
+        public async Task<IActionResult> GetUser(string user)
         {
             try
             {
-                ArgumentNullException.ThrowIfNull(code, nameof(code));
+                GithubUserResponse githubUser = await this._githubApiService.GetUserInfoAsync(user);
 
-                var githubApiService =
-                    new GithubApiService(
-                       this._httpClientFactory,
-                       this._githubAuthService,
-                       code
-                    );
-
-                await githubApiService.GetUserInfoAsync();
-
-                return Ok();
+                return Ok(githubUser);
             }
-            catch (ArgumentNullException ex)
+            catch (Exception ex)
             {
-                this._logger.LogError(ex, "ArgumentNullException: {ParamName}", ex.ParamName);
+                this._logger.LogError(ex, "Exception: {Message}", ex.Message);
 
-                return BadRequest(new ErrorResponse
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse
                 {
-                    Message = $"\"{ex.ParamName}\" not informed"
+                    Message = "An error occurred while processing your request"
                 });
+            }
+        }
+
+        [HttpGet("{user}/repos")]
+        public async Task<IActionResult> GetRepos(string user)
+        {
+            try
+            {
+                IEnumerable<GithubRepoResponse> repos = await this._githubApiService.GetUserRepositoriesAsync(user);
+
+                return Ok(repos);
             }
             catch (Exception ex)
             {
