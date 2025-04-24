@@ -91,7 +91,7 @@ namespace Meishi.Server.Services.GithubApi
             res.EnsureSuccessStatusCode();
         }
 
-        public async Task GetUserRepositoriesAsync(string user)
+        public async Task GetUserRepositoriesAsync()
         {
             await this.VerifyToken();
 
@@ -101,7 +101,7 @@ namespace Meishi.Server.Services.GithubApi
                 new AuthenticationHeaderValue("Bearer", this._accessToken);
 
             // TODO: Map the response to an object and return it
-            var res = await httpClient.GetAsync($"/users/{user}/repos");
+            var res = await httpClient.GetAsync($"/user/repos");
 
             res.EnsureSuccessStatusCode();
         }
