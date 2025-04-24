@@ -28,6 +28,8 @@ namespace Meishi.Server
 
         public static void ConfigureServices(IServiceCollection services, IConfiguration config)
         {
+            services.Configure<MeishiOptions>(config);
+
             services.AddHttpClient<IGithubApiService, GithubApiService>(options =>
             {
                 options.BaseAddress = new Uri("https://api.github.com/");
