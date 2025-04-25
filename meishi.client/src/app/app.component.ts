@@ -1,11 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
+interface GithubUserData {
+  id: number;
+  login: string;
+  name: string;
+  company: string;
+  notification_email: string;
+  location: string;
+  bio: string;
+  followers: number;
 }
 
 @Component({
@@ -14,25 +19,17 @@ interface WeatherForecast {
   standalone: false,
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-  public forecasts: WeatherForecast[] = [];
-
+export class AppComponent {
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
-    this.getForecasts();
-  }
+  githubUserData: GithubUserData | null = null;
 
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
+  githubDataForm = new FormGroup({
+    githubUsername: new FormControl('', Validators.required),
+  });
 
-  title = 'meishi.client';
+  onSubmit() {
+    this.http.get<GithubUserData>(`/user/${this.githubDataForm.value.githubUsername}`)
+      .subscribe(data => this.githubUserData = data)
+  }
 }

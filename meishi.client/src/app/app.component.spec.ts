@@ -1,6 +1,9 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { By } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -10,7 +13,11 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
-      imports: [HttpClientTestingModule]
+      imports: [ReactiveFormsModule],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
     }).compileComponents();
   });
 
@@ -28,18 +35,46 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should retrieve weather forecasts from the server', () => {
-    const mockForecasts = [
-      { date: '2021-10-01', temperatureC: 20, temperatureF: 68, summary: 'Mild' },
-      { date: '2021-10-02', temperatureC: 25, temperatureF: 77, summary: 'Warm' }
-    ];
+  it('should disable the submit button on component startup', () => {
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('button')).properties['disabled']).toBeTrue();
+  });
 
-    component.ngOnInit();
+  it('should disable the submit button if github username input is empty', () => {
+    component.githubDataForm.setValue({ githubUsername: '' });
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('button')).properties['disabled']).toBeTrue();
+  });
 
-    const req = httpMock.expectOne('/weatherforecast');
+  it('should enable the submit button if github username input is filled', () => {
+    component.githubDataForm.setValue({ githubUsername: 'something' });
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('button')).properties['disabled']).toBeFalse();
+  });
+
+  it('should retrieve the github user data from the server', () => {
+    const mockGithubUserData = {
+      id: 99999999,
+      login: "mock-user",
+      name: "Mock User",
+      company: "Mock Company",
+      notification_email: "mock-user@mock.com",
+      location: "Rio de Janeiro, Brasil",
+      bio: "Just a mock user",
+      followers: 10
+    };
+
+    component.githubDataForm.setValue({
+      githubUsername: mockGithubUserData.login
+    });
+
+    component.onSubmit();
+
+    const req = httpMock.expectOne('/user/' + mockGithubUserData.login);
     expect(req.request.method).toEqual('GET');
-    req.flush(mockForecasts);
 
-    expect(component.forecasts).toEqual(mockForecasts);
+    req.flush(mockGithubUserData);
+
+    expect(component.githubUserData).toEqual(mockGithubUserData);
   });
 });
