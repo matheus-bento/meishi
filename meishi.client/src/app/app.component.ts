@@ -29,7 +29,7 @@ export class AppComponent {
   });
 
   onSubmit() {
-    this.http.get<GithubUserData>(`/user/${this.githubDataForm.value.githubUsername}`)
+    this.http.get<GithubUserData>('/api/user/' + this.githubDataForm.value.githubUsername)
       .subscribe(data => this.githubUserData = data)
   }
 }

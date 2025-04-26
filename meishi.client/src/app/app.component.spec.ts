@@ -1,5 +1,5 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { By } from '@angular/platform-browser';
@@ -15,7 +15,9 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       imports: [ReactiveFormsModule],
       providers: [
-        provideHttpClient(),
+        provideHttpClient
+          (withFetch()
+        ),
         provideHttpClientTesting()
       ]
     }).compileComponents();
@@ -70,7 +72,7 @@ describe('AppComponent', () => {
 
     component.onSubmit();
 
-    const req = httpMock.expectOne('/user/' + mockGithubUserData.login);
+    const req = httpMock.expectOne('/api/user/' + mockGithubUserData.login);
     expect(req.request.method).toEqual('GET');
 
     req.flush(mockGithubUserData);
