@@ -1,29 +1,20 @@
-.container {
-  margin: 0 auto;;
-}
-
-@media (max-width: 500px) {
-  .container {
-    min-width: 275px;
-  }
-}
-
-@media (min-width: 500px) {
-  .container {
-    min-width: 400px;
-  }
-}
-
-form {
+github-username-form {
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
-mat-form-field {
-  margin-bottom: 16px;
+/* Filling the screen height for mobile and desktop
+   accounting for the toolbar height */
+@media (max-width: 599px) {
+  github-username-form {
+    height: calc(100vh - 56px);
+  }
 }
 
-button {
-  width: fit-content;
-  align-self: center;
+@media (min-width: 599px) {
+  github-username-form {
+    height: calc(100vh - 64px);
+  }
 }

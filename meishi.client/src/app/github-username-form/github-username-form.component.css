@@ -1,0 +1,25 @@
+@media (max-width: 600px) {
+  .container {
+    min-width: 275px;
+  }
+}
+
+@media (min-width: 600px) {
+  .container {
+    min-width: 400px;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-form-field {
+  margin-bottom: 16px;
+}
+
+button {
+  width: fit-content;
+  align-self: center;
+}
