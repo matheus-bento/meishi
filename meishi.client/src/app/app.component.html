@@ -1,8 +1,9 @@
 <div class="container">
   <form [formGroup]="githubDataForm" (ngSubmit)="onSubmit()">
-    <label for="username">Github username:</label>
-    <input type="text" id="username" autocomplete="off" formControlName="githubUsername" />
-
-    <button type="submit" [disabled]="!githubDataForm.valid">Generate presentation card</button>
+      <mat-form-field appearance="fill">
+        <mat-label>Github username</mat-label>
+        <input matInput formControlName="githubUsername" autocomplete="off" placeholder="username" required />
+      </mat-form-field>
+      <button mat-flat-button type="submit" [disabled]="!githubDataForm.valid">Generate presentation card</button>
   </form>
 </div>

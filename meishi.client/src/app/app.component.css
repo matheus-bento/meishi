@@ -1,9 +1,29 @@
 .container {
-  margin: 0 auto;
-  max-width: 480px;
+  margin: 0 auto;;
+}
+
+@media (max-width: 500px) {
+  .container {
+    min-width: 275px;
+  }
+}
+
+@media (min-width: 500px) {
+  .container {
+    min-width: 400px;
+  }
 }
 
 form {
   display: flex;
   flex-direction: column;
+}
+
+mat-form-field {
+  margin-bottom: 16px;
+}
+
+button {
+  width: fit-content;
+  align-self: center;
 }
