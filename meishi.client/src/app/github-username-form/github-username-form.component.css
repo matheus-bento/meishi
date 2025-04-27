@@ -1,11 +1,11 @@
 @media (max-width: 600px) {
-  .container {
+  #github-user-form-container {
     min-width: 275px;
   }
 }
 
 @media (min-width: 600px) {
-  .container {
+  #github-user-form-container {
     min-width: 400px;
   }
 }

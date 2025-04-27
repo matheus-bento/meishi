@@ -1,4 +1,4 @@
-<div class="container">
+<div id="github-user-form-container">
   <form [formGroup]="githubDataForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
       <mat-label>Github username</mat-label>
@@ -7,4 +7,4 @@
     <button mat-flat-button type="submit" [disabled]="!githubDataForm.valid">Generate presentation card</button>
   </form>
 </div>
-  
+<app-github-user-card *ngIf="githubUserData() !== null" [githubUser]="getGithubUserData()"></app-github-user-card>

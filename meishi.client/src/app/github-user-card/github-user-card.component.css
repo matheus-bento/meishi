@@ -1,0 +1,7 @@
+#github-user-card-container {
+    display: flex;
+    flex-wrap: column wrap;
+
+    justify-content: center;
+    align-items: flex-start;
+}

@@ -10,11 +10,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GithubUsernameFormComponent } from './github-username-form/github-username-form.component';
+import { GithubUserCardComponent } from './github-user-card/github-user-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GithubUsernameFormComponent
+    GithubUsernameFormComponent,
+    GithubUserCardComponent
   ],
   imports: [
     BrowserModule,

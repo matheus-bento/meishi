@@ -1,17 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Component } from '@angular/core';
-
-interface GithubUserData {
-  id: number;
-  login: string;
-  name: string;
-  company: string;
-  notification_email: string;
-  location: string;
-  bio: string;
-  followers: number;
-}
+import { Component, signal } from '@angular/core';
+import { GithubUserData } from '../../core/model/github-user-data';
 
 @Component({
   selector: 'github-username-form',
@@ -22,7 +12,7 @@ interface GithubUserData {
 export class GithubUsernameFormComponent {
   constructor(private http: HttpClient) {}
 
-  githubUserData: GithubUserData | null = null;
+  githubUserData = signal<GithubUserData | null>(null);
 
   githubDataForm = new FormGroup({
     githubUsername: new FormControl('', Validators.required),
@@ -30,6 +20,13 @@ export class GithubUsernameFormComponent {
 
   onSubmit() {
     this.http.get<GithubUserData>('/api/user/' + this.githubDataForm.value.githubUsername)
-      .subscribe(data => this.githubUserData = data)
+      .subscribe({
+        next: data => this.githubUserData.set(data),
+        error: _ => this.githubUserData.set(null)
+      });
+  }
+
+  getGithubUserData(): GithubUserData {
+    return this.githubUserData() as GithubUserData;
   }
 }
